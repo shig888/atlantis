@@ -283,6 +283,8 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 	}
 	ctx.Log.Debug("%d files were modified in this pull request", len(modifiedFiles))
 
+	ctx.Log.Debug("%v :list of files were modified in this pull request", modifiedFiles)
+
 	if p.SkipCloneNoChanges && p.VCSClient.SupportsSingleFileDownload(ctx.Pull.BaseRepo) {
 		repoCfgFile := p.GlobalCfg.RepoConfigFile(ctx.Pull.BaseRepo.ID())
 		hasRepoCfg, repoCfgData, err := p.VCSClient.GetFileContent(ctx.Pull, repoCfgFile)
@@ -363,11 +365,12 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 			return nil, err
 		}
 		ctx.Log.Info("%d projects are to be planned based on their when_modified config", len(matchingProjects))
+		ctx.Log.Debug("Project is data is like:%v", matchingProjects)
 
 		for _, mp := range matchingProjects {
 			ctx.Log.Debug("determining config for project at dir: %q workspace: %q", mp.Dir, mp.Workspace)
 			mergedCfg := p.GlobalCfg.MergeProjectCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp, repoCfg)
-
+			ctx.Log.Debug("repoDir is like:%s", repoDir)
 			projCtxs = append(projCtxs,
 				p.ProjectCommandContextBuilder.BuildProjectContext(
 					ctx,
@@ -393,6 +396,7 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 		}
 		// build a module index for projects that are explicitly included
 		modifiedProjects := p.ProjectFinder.DetermineProjects(ctx.Log, modifiedFiles, ctx.Pull.BaseRepo.FullName, repoDir, p.AutoplanFileList, moduleInfo)
+		ctx.Log.Debug("Project is data is like:%v", matchingProjects)
 		ctx.Log.Info("automatically determined that there were %d projects modified in this pull request: %s", len(modifiedProjects), modifiedProjects)
 		for _, mp := range modifiedProjects {
 			ctx.Log.Debug("determining config for project at dir: %q", mp.Path)
@@ -410,6 +414,7 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 			}
 			pCfg := p.GlobalCfg.DefaultProjCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp.Path, pWorkspace)
 
+			ctx.Log.Debug("repoDir is like:%s", repoDir)
 			projCtxs = append(projCtxs,
 				p.ProjectCommandContextBuilder.BuildProjectContext(
 					ctx,
