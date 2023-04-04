@@ -370,7 +370,7 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 		for _, mp := range matchingProjects {
 			ctx.Log.Debug("determining config for project at dir: %q workspace: %q", mp.Dir, mp.Workspace)
 			mergedCfg := p.GlobalCfg.MergeProjectCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp, repoCfg)
-			ctx.Log.Debug("repoDir is like:%s", repoDir)
+			ctx.Log.Debug("mp is like:%v", mp)
 			projCtxs = append(projCtxs,
 				p.ProjectCommandContextBuilder.BuildProjectContext(
 					ctx,
