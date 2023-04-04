@@ -239,10 +239,10 @@ func (p *DefaultProjectFinder) DetermineProjectsViaConfig(log logging.SimpleLogg
 				// in a deleted directory then when we finally do clone the repo
 				// we'll call this function again and then we'll detect the
 				// directory was deleted.
+				log.Debug("inside match project is like: %v", project)
 				if absRepoDir != "" {
 					_, err := os.Stat(filepath.Join(absRepoDir, project.Dir))
 					if err == nil {
-						log.Debug("inside match project is like: %v", project)
 						projects = append(projects, project)
 					} else {
 						log.Debug("project at dir %q not included because dir does not exist", project.Dir)
