@@ -186,6 +186,7 @@ func (p *DefaultProjectFinder) DetermineProjectsViaConfig(log logging.SimpleLogg
 			dependentProjects = append(dependentProjects, downstreamProjects...)
 		}
 	}
+	log.Debug("dependentProjects is %v", dependentProjects)
 
 	var projects []valid.Project
 	for _, project := range config.Projects {
@@ -241,6 +242,7 @@ func (p *DefaultProjectFinder) DetermineProjectsViaConfig(log logging.SimpleLogg
 				if absRepoDir != "" {
 					_, err := os.Stat(filepath.Join(absRepoDir, project.Dir))
 					if err == nil {
+						log.Debug("inside match project is like: %v", project)
 						projects = append(projects, project)
 					} else {
 						log.Debug("project at dir %q not included because dir does not exist", project.Dir)
